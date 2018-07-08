@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         WindowStyle="None"
         Title="Teleprompter" Height="450" Width="800">
-    <Grid>
-        <Rectangle Grid.Column="1" Margin="0,5,0,0" Name="LineHighLight" Fill="#7FFF0000" Height="18" VerticalAlignment="Top"/>
+    <Grid Margin="5">
+        <Rectangle Grid.Column="1" Margin="0,0,0,0" Name="LineHighLight" Fill="#7FFF0000" Height="24" VerticalAlignment="Top"/>
         <ScrollViewer Grid.Column="1" Name="Scroll">
             <TextBlock TextWrapping="NoWrap" Name="TeleText" Text="{Binding MainText}" FontSize="18" FontFamily="Segoe UI Semibold" Margin="0,0,0,5000"/>
         </ScrollViewer>

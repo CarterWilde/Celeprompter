@@ -6,18 +6,19 @@
         xmlns:local="clr-namespace:Teleprompter_App"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="Teleprompter" Height="450" Width="800">
-    <Grid>
+        Title="Teleprompter" Height="450" Width="800" KeyDown="WindowKeyDown">
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
-        <Rectangle Grid.Column="1" Margin="0,5,0,0" Name="LineHighLight" Fill="#7FFF0000" Height="18" VerticalAlignment="Top"/>
+        <Rectangle Grid.Column="1" Margin="0" Name="LineHighLight" Fill="#7FFF0000" Height="24" VerticalAlignment="Top"/>
         <ScrollViewer Grid.Column="1" Name="ScrollView" ScrollChanged="ScrollChanged">
             <TextBlock TextWrapping="NoWrap" Name="TeleText" FontSize="18" FontFamily="Segoe UI Semibold" Margin="0,0,0,5000"/>
         </ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -27,11 +28,19 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Margin="10" Content="Font Size" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="1" Text="18" VerticalAlignment="Center" Padding="5" Margin="10" KeyUp="EnterKeyUp" Name="FontInput"/>
+                <Label Grid.Row="0" Content="Character Length" Margin="10 0" VerticalAlignment="Bottom"/>
+                <TextBox Grid.Row="1" Text="60" VerticalAlignment="Top" Padding="5" Margin="10 0" KeyUp="CharInputEvent" Name="CharInput"/>
             </Grid>
-            <Button Grid.Row="1" Content="Open File" Margin="10" Padding="5" VerticalAlignment="Center" Click="OpenNewFileClick"/>
-            <Button Grid.Row="2" Content="Fullscreen Window" Margin="10" Padding="5" VerticalAlignment="Center" Click="NewWindow"/>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Font Size" Margin="10 0" VerticalAlignment="Bottom"/>
+                <TextBox Grid.Row="1" Text="18" VerticalAlignment="Top" Padding="5" Margin="10 0" KeyUp="FontInputEvent" Name="FontInput"/>
+            </Grid>
+            <Button Grid.Row="2" Content="Open File" Margin="10" Padding="5" VerticalAlignment="Center" Click="OpenNewFileClick"/>
+            <Button Grid.Row="3" Content="Fullscreen Window" Margin="10" Padding="5" VerticalAlignment="Center" Click="NewWindow"/>
         </Grid>
     </Grid>
 </Window>

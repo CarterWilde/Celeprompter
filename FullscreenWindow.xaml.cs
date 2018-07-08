@@ -30,7 +30,11 @@ namespace Teleprompter_App {
 
     public void FontSync(int i){
       TeleText.FontSize = i;
-      LineHighLight.Height = i;
+      LineHighLight.Height = i + 6;
+    }
+
+    public void CharSync(int i) {
+      TeleText.Text = App.MainText;
     }
 
     public void ScrollSync(object sender, RoutedEventArgs e) {
