@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Teleprompter_App.Properties {
+namespace TeleprompterApp.Properties {
 
 
   [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

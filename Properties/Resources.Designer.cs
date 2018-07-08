@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Teleprompter_App.Properties {
+namespace TeleprompterApp.Properties {
 
 
   /// <summary>
@@ -38,7 +38,7 @@ namespace Teleprompter_App.Properties {
     internal static global::System.Resources.ResourceManager ResourceManager {
       get {
         if ((resourceMan == null)) {
-          global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Teleprompter_App.Properties.Resources", typeof(Resources).Assembly);
+          global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TeleprompterApp.Properties.Resources", typeof(Resources).Assembly);
           resourceMan = temp;
         }
         return resourceMan;

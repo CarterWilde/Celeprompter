@@ -16,8 +16,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Teleprompter_App {
+namespace TeleprompterApp {
   public partial class MainWindow : Window {
+    private bool isMoving = false;                  //False - ignore mouse movements and don't scroll
+    private bool isDeferredMovingStarted = false;   //True - Mouse down -> Mouse up without moving -> Move; False - Mouse down -> Move
+    private Point? startPosition = null;
+    private double slowdown = 200;
+
     IList<FullscreenWindow> fullscreenWindows = new List<FullscreenWindow>();
     DispatcherTimer timer = new DispatcherTimer();
     public MainWindow() {
@@ -33,7 +38,7 @@ namespace Teleprompter_App {
       OpenFileDialog openFileDialog = new OpenFileDialog {
         Filter = "Text files (*.txt)|*.txt"
       };
-      if (openFileDialog.ShowDialog() == true){
+      if (openFileDialog.ShowDialog() == true) {
         if (openFileDialog.CheckFileExists && openFileDialog.CheckPathExists) {
           using (Stream fileStream = openFileDialog.OpenFile()) {
             StreamReader reader = new StreamReader(fileStream);
@@ -66,6 +71,16 @@ namespace Teleprompter_App {
       }
     }
 
+    private void ScrollSpeedEvent(object sender, KeyEventArgs e) {
+      if (e.Key == Key.Return) {
+        if (int.TryParse(ScrollInput.Text, out int n)) {
+          if (n != 0) {
+            slowdown = n;
+          }
+        }
+      }
+    }
+
     private void CharInputEvent(object sender, KeyEventArgs e) {
       if (e.Key == Key.Return) {
         string CharSizeValue = CharInput.Text;
@@ -83,12 +98,12 @@ namespace Teleprompter_App {
     }
 
     private void NewWindow(object sender, RoutedEventArgs e) {
-      fullscreenWindows.Add(new FullscreenWindow(ScrollView.VerticalOffset));
+      fullscreenWindows.Add(new FullscreenWindow(ScrollView.VerticalOffset, TeleText.FontSize));
       fullscreenWindows.Last().InitializeComponent();
       fullscreenWindows.Last().Show();
     }
 
-    private void ScrollChanged(object sender, ScrollChangedEventArgs e){
+    private void ScrollChanged(object sender, ScrollChangedEventArgs e) {
       TeleText.Text = App.MainText;
       if (fullscreenWindows != null) {
         foreach (FullscreenWindow window in fullscreenWindows) {
@@ -97,12 +112,54 @@ namespace Teleprompter_App {
       }
     }
 
-    private void WindowKeyDown(object sender, KeyEventArgs e) {
-      if(e.Key == Key.Down){
-        App.ScrollSpeed += Math.Pow(.25, App.ScrollSpeed);
+    private void CloseAll(object sender, RoutedEventArgs e) {
+      foreach (FullscreenWindow screen in fullscreenWindows) {
+        screen.Close();
       }
-      if (e.Key == Key.Up) {
-        App.ScrollSpeed -= Math.Pow(.25, App.ScrollSpeed);
+      this.Close();
+    }
+
+
+
+
+    private void ScrollViewer_MouseDown(object sender, MouseButtonEventArgs e) {
+      if (this.isMoving == true) //Moving with a released wheel and pressing a button
+        this.CancelScrolling();
+      else if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed) {
+        if (this.isMoving == false) //Pressing a wheel the first time
+        {
+          this.isMoving = true;
+          this.startPosition = e.GetPosition(sender as IInputElement);
+          this.isDeferredMovingStarted = true; //the default value is true until the opposite value is set
+        }
+      }
+    }
+
+    private void ScrollViewer_MouseUp(object sender, MouseButtonEventArgs e) {
+      if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Released && this.isDeferredMovingStarted != true)
+        this.CancelScrolling();
+    }
+
+    private void CancelScrolling() {
+      this.isMoving = false;
+      this.startPosition = null;
+      this.isDeferredMovingStarted = false;
+    }
+
+    private void ScrollViewer_MouseMove(object sender, MouseEventArgs e) {
+      var sv = sender as ScrollViewer;
+
+      if (this.isMoving && sv != null) {
+        this.isDeferredMovingStarted = false; //standard scrolling (Mouse down -> Move)
+
+        var currentPosition = e.GetPosition(sv);
+        var offset = currentPosition - startPosition.Value;
+        offset.Y /= slowdown;
+        offset.X /= slowdown;
+
+        //if(Math.Abs(offset.Y) > 25.0/slowdown)  //Some kind of a dead space, uncomment if it is neccessary
+        sv.ScrollToVerticalOffset(sv.VerticalOffset + offset.Y);
+        sv.ScrollToHorizontalOffset(sv.HorizontalOffset + offset.X);
       }
     }
   }

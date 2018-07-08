@@ -16,12 +16,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Teleprompter_App {
+namespace TeleprompterApp {
   public partial class FullscreenWindow : Window {
-    public FullscreenWindow(double verticalOffset) {
+    public FullscreenWindow(double verticalOffset, double fontSize) {
       InitializeComponent();
       Scroll.ScrollToVerticalOffset(verticalOffset);
       TeleText.Text = App.MainText;
+      TeleText.FontSize = fontSize;
     }
 
     public void TextSync(){
